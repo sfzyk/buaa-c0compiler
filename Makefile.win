@@ -1,0 +1,64 @@
+# Project: ti
+# Makefile created by Dev-C++ 5.11
+
+CPP      = g++.exe -D__DEBUG__
+CC       = gcc.exe -D__DEBUG__
+WINDRES  = windres.exe
+OBJ      = absyn.o c0error.o c0lex.o env.o print.o semant.o symbol.o table.o testsec.o util.o lev.o penv.o topcode.o
+LINKOBJ  = absyn.o c0error.o c0lex.o env.o print.o semant.o symbol.o table.o testsec.o util.o lev.o penv.o topcode.o
+LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -g3
+INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
+CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
+BIN      = ti.exe
+CXXFLAGS = $(CXXINCS) -g3 -std=c11
+CFLAGS   = $(INCS) -g3 -std=c11
+RM       = rm.exe -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+absyn.o: absyn.c
+	$(CC) -c absyn.c -o absyn.o $(CFLAGS)
+
+c0error.o: c0error.c
+	$(CC) -c c0error.c -o c0error.o $(CFLAGS)
+
+c0lex.o: c0lex.c
+	$(CC) -c c0lex.c -o c0lex.o $(CFLAGS)
+
+env.o: env.c
+	$(CC) -c env.c -o env.o $(CFLAGS)
+
+print.o: print.c
+	$(CC) -c print.c -o print.o $(CFLAGS)
+
+semant.o: semant.c
+	$(CC) -c semant.c -o semant.o $(CFLAGS)
+
+symbol.o: symbol.c
+	$(CC) -c symbol.c -o symbol.o $(CFLAGS)
+
+table.o: table.c
+	$(CC) -c table.c -o table.o $(CFLAGS)
+
+testsec.o: testsec.c
+	$(CC) -c testsec.c -o testsec.o $(CFLAGS)
+
+util.o: util.c
+	$(CC) -c util.c -o util.o $(CFLAGS)
+
+lev.o: lev.c
+	$(CC) -c lev.c -o lev.o $(CFLAGS)
+
+penv.o: penv.c
+	$(CC) -c penv.c -o penv.o $(CFLAGS)
+
+topcode.o: topcode.c
+	$(CC) -c topcode.c -o topcode.o $(CFLAGS)
