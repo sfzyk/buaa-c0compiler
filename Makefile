@@ -1,37 +1,60 @@
-#语法分析的部分 
-sec : semant.o c0lex.o c0error.o util.o absyn.o table.o symbol.o table.o env.o print.o 
-	gcc -g -c -o testsec.o testsec.c 
-	gcc -g -o sec testsec.o semant.o  c0lex.o c0error.o util.o absyn.o symbol.o table.o env.o  print.o
-### 
+ 
 
-semant.o : semant.c semant.h c0lex.h c0error.h
-	gcc -g -c -o semant.o semant.c 
+ 
+CC       = gcc.exe -D__DEBUG__ 
 
-absyn.o : absyn.c absyn.h symbol.h table.h util.h
-	gcc -g  -o absyn.o -c absyn.c 
-	 
-# 测试词法分析器的正常工作 
-lex: lextest.o c0lex.o c0error.o util.o
-	gcc -g -o lex lextest.o c0lex.o c0error.o util.o
-lextest.o : lextest.c c0lex.h c0error.h util.h
-	gcc -g -o test.o -c test.c 
-####
-c0lex.o: c0lex.c c0lex.h c0error.h
-	gcc -g -c c0lex.c -o c0lex.o
-c0error.o: c0error.c c0error.h
-	gcc -g -c c0error.c -o c0error.o
-util.o: util.c util.h
-	gcc -g -c util.c -o util.o
-symbol.o : symbol.c symbol.h
-	gcc -g -c symbol.c -o symbol.o
-table.o : table.c table.h
-	gcc -g -c table.c -o table.o
-env.o : env.c env.h
-	gcc -g -c env.c -o env.o
-print.o : print.c print.h
-	gcc -g -c print.c -o print.o
+OBJ      = absyn.o c0error.o c0lex.o env.o print.o semant.o symbol.o table.o testsec.o util.o lev.o penv.o topcode.o
+LINKOBJ  = absyn.o c0error.o c0lex.o env.o print.o semant.o symbol.o table.o testsec.o util.o lev.o penv.o topcode.o
+BIN      = sfti.exe
+ 
+CFLAGS   = $(INCS) -g2 -std=c11 -g
+ 
 
-clean :
-	rm *.o
-	rm *.exe
-	
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+absyn.o: absyn.c
+	$(CC) -c absyn.c -o absyn.o $(CFLAGS)
+
+c0error.o: c0error.c
+	$(CC) -c c0error.c -o c0error.o $(CFLAGS)
+
+c0lex.o: c0lex.c
+	$(CC) -c c0lex.c -o c0lex.o $(CFLAGS)
+
+env.o: env.c
+	$(CC) -c env.c -o env.o $(CFLAGS)
+
+print.o: print.c
+	$(CC) -c print.c -o print.o $(CFLAGS)
+
+semant.o: semant.c
+	$(CC) -c semant.c -o semant.o $(CFLAGS)
+
+symbol.o: symbol.c
+	$(CC) -c symbol.c -o symbol.o $(CFLAGS)
+
+table.o: table.c
+	$(CC) -c table.c -o table.o $(CFLAGS)
+
+testsec.o: testsec.c
+	$(CC) -c testsec.c -o testsec.o $(CFLAGS)
+
+util.o: util.c
+	$(CC) -c util.c -o util.o $(CFLAGS)
+
+lev.o: lev.c
+	$(CC) -c lev.c -o lev.o $(CFLAGS)
+
+penv.o: penv.c
+	$(CC) -c penv.c -o penv.o $(CFLAGS)
+
+topcode.o: topcode.c
+	$(CC) -c topcode.c -o topcode.o $(CFLAGS)

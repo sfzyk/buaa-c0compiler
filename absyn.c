@@ -1,13 +1,11 @@
+#include <assert.h> 
 #include <string.h>
-#include <assert.h>
 
 #include "util.h"
 #include "table.h"
 #include "symbol.h"
-
-#include "symbol.h"
 #include "absyn.h"
-#include "env.h" 
+#include "env.h"
 
 
 A_rettype type2ret(A_type a){
@@ -162,7 +160,7 @@ A_funcDecList A_FuncDecList(A_funcDec fdd,A_funcDecList fddd){
 }
 
 A_funcDec    A_FuncDec(A_rettype ty,symbol sym,A_argList al,A_cseqs cq,int pos){
-	A_funcDec fd=checked_malloc(sizeof(fd));
+	A_funcDec fd=checked_malloc(sizeof(*fd));
 	fd->agrlist=al;
 	fd->cseqs=cq;
 	fd->rettype=ty;

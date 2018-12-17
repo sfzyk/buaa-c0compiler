@@ -3,6 +3,7 @@
 void *checked_malloc(int len)
 {
 	void *p = malloc(len);
+ 
  	if (!p) {
     	fprintf(stderr,"\n failed malloc \n");
     	exit(1);

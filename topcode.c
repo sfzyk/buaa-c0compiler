@@ -74,7 +74,7 @@ static void display(pcode pc){
 		case LOD:printf("LOD  ");break;
 		case STO:printf("STO  ");break;
 		case CAL:printf("CAL  ");break;
-		case PINT:printf("PINT  ");break;
+		case PINT:printf("INT  ");break;
 		case JMP:printf("JMP  ");break;
 		case JPC:printf("JPC  ");break;
 		case RED:printf("RED  ");break;
@@ -91,10 +91,12 @@ void outputpcode(){
 		printf("%d :",i);
 		display(intr[i]);
 	}
+	printf("starting address is %d \n",start_ip);
 }
 static void EnterConst(TAB_table env,lev l,A_constDecList ccdl){
-	
+ 
 	for(A_constDecList cdl=ccdl;cdl;cdl=cdl->tail){
+	 
 		A_constval t;
 		switch(cdl->head->type){
 			case INT_TY:
@@ -348,12 +350,17 @@ void pproc_seq(TAB_table env,A_seq seq,lev l){
 			pproc_seq(env,seq->u.iff.thenn,l);
 			
 			int *t;
-			pcode jup=outpcode(JMP,0,0);
-			t=jup->y;
+			if(seq->u.iff.elsee){
+				pcode jup=outpcode(JMP,0,0);
+				t=jup->y;
+			}
 			
 			*f=ip;//回填技术
-			pproc_seq(env,seq->u.iff.elsee,l);
-			*t=ip;
+			if(seq->u.iff.elsee){
+				pproc_seq(env,seq->u.iff.elsee,l);
+				*t=ip;
+			}
+		
 			break;
 		}
 		case A_ass:{
@@ -417,7 +424,7 @@ void pproc_seq(TAB_table env,A_seq seq,lev l){
 			break;
 		}
 		case A_while:{
-			int *e;
+			int *e=checked_malloc(sizeof(int));
 			int *s=checked_malloc(sizeof(int));
 			*s= ip;
 			pproc_flag(env,seq->u.whilee.flag,l);
@@ -462,16 +469,20 @@ void pproc_seqs(TAB_table env,A_seqs seqs,lev l){
 	
 }
 
-
+//
 void pproc_func(TAB_table env,A_funcDec fd,lev l){
+ 
+	P_entry pe=PfuncEntry(fd->name,fd->rettype,fd->agrlist,l->lev,-1);
+	S_enter(env,fd->name,pe); //函数头需要最先处理 是唯一在这个层次外可以访问的东西 
+	 
 	beginScope(env);	
 	for(A_argList a=fd->agrlist;a;a=a->tail){
 		AllocVar(env,l,a->head->type,a->head->argsy);
 	}
- 	P_entry pe=PfuncEntry(fd->name,fd->rettype,fd->agrlist,l->lev,-1);
-	S_enter(env,fd->name,pe);
-	EnterConst(env,l,fd->cseqs->constdeclist);
+ 
 	
+	EnterConst(env,l,fd->cseqs->constdeclist);
+ 
 	int oldoffset=l->offset;
 	A_varDecList nvdl=NULL;
 	for(A_varDecList vdl=fd->cseqs->vardeclist;vdl;vdl=vdl->tail){ //reverse not necessary
@@ -481,11 +492,14 @@ void pproc_func(TAB_table env,A_funcDec fd,lev l){
 		AllocVar(env,l,nvdl->head->type,nvdl->head->sym);
 	}
 	int newoffset=l->offset;
-	outpcode(INT,0,newoffset-oldoffset);
+	
+	if(newoffset-oldoffset!=0) 
+	outpcode(PINT,0,newoffset-oldoffset);
 // note 目前不需要考虑静态链信息 
 // 如果有程序的子函数定义(目前没有) ，那么就应该在这里进行管理
 // to do
 	//之前的函数地址已经确定  
+ 
 	*pe->u.fun.start=ip;
 	pproc_seqs(env,fd->cseqs->seqs,l);
 	endScope(env);
@@ -504,12 +518,14 @@ void getpcode(A_prog prog){
  	display[0]=1; // 0 是预留层 
 	display[1]=2; // 1 是当前层主函数	 
 	*/
+ 
 	TAB_table env=S_empty();
 	
 	lev l=NewLev(); 
 	l->lev=0;
 	l->offset=3; 
 	EnterConst(env,l,prog->constdeclist);
+ 
 	
 	int oldoffset = l->offset;
 	A_varDecList nvdl=NULL;
@@ -519,19 +535,28 @@ void getpcode(A_prog prog){
 	for(;nvdl;nvdl=nvdl->tail){
 		AllocVar(env,l,nvdl->head->type,nvdl->head->sym);
 	}
+	
 	int newoffset= l->offset;
+	if(newoffset-oldoffset!=0) 
 	outpcode(PINT,0,newoffset-oldoffset);
 	
 	A_funcDecList nfdl=NULL; 
 	for(A_funcDecList fdl=prog->fundeclist;fdl;fdl=fdl->tail){  //reverse
 		nfdl=A_FuncDecList(fdl->head,nfdl);
 	}
+	int co=0;
 	for(;nfdl;nfdl=nfdl->tail){
+		
 		lev nl=NewLev();
 		nl->lev=l->lev+1;
+		nl->offset=4;
+ 
 		pproc_func(env,nfdl->head,nl); 	
+ 
 	}
+
 	// main 函数处理过程
+	
 	beginScope(env);	
 
 	for(A_argList a=prog->mainn->valargs;a;a=a->tail){

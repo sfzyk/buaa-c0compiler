@@ -142,14 +142,15 @@ A_prog proc_prog(){
  
 		if(tokenp->tkinfo.sym==MAINSY){ //解析主函数 
 			prelook(0);
-	 
+ 
 			m=proc_main(env);
-		 
+ 
 			return A_Prog(cdl,vdl,fdl,m);
 		}else{
 			prelook(0);      
 			A_funcDec fd=proc_funcdec(env);        //解析函数 
 			fdl=A_FuncDecList(fd,fdl);
+ 
 		}
 	}
 } 
