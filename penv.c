@@ -3,6 +3,7 @@
 #include "table.h"
 #include "symbol.h"
 #include "absyn.h"
+#include "lev.h"
 #include "penv.h"
 P_entry PvarEntry(symbol va,A_type ty,int isconst,A_constval val,int lev,int offset){
 	P_entry en=checked_malloc(sizeof(*en));
@@ -16,7 +17,7 @@ P_entry PvarEntry(symbol va,A_type ty,int isconst,A_constval val,int lev,int off
 	return en;
 }
 
-P_entry PfuncEntry(symbol func,A_rettype ret,A_argList al,int lev,int start){
+P_entry PfuncEntry(symbol func,A_rettype ret,A_argList al,lev lev,int start){
 	P_entry en=checked_malloc(sizeof(*en));
 	en->kind=fun;
 	en->u.fun.arglist=al;

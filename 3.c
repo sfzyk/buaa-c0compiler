@@ -18,16 +18,15 @@ int power(int x)
 void main()
 {
    int number, test;
-   printf("Input a number:");
+   printf("Input\n");
    scanf(number);
    test=power(number);
-   printf(test);
+   printf(test); 
    if (test<UPPER) 
-     printf("less than upper_line",UPPER-test);
+     printf("less ",UPPER-test);
    else
-     printf("more than upper_dsdsline",test-UPPER);
-   printf("Now we test the nagtive-parameter:");
+     printf("more than upper_line\n",test-UPPER);
+   printf("Now we test the nagtive-parameter:\n");
    printf(power(-1));
 }
 
-"you are mine\n sone \n sdd\tsddf\" fgfffb\" fdf  \' \\ \' \? ? \w"

@@ -30,7 +30,7 @@ typedef struct TOKENINFO{
 	union{
 		int   num;
 		float f;
-		char  str[50];
+		char  str[100];
 	}u;
 }TokenInfo;
 

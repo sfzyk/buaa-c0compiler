@@ -268,8 +268,12 @@ A_seq  A_PrintSeq(char* s,A_exp exp,int pos){
 	se->kind=A_print;
 	se->pos=pos;
 	se->u.print.exp=exp;
-	se->u.print.stringg=checked_malloc((strlen(s)+3));
-	strcpy(se->u.print.stringg,s);
+	if(s){
+		se->u.print.stringg=checked_malloc((strlen(s)+3));
+		strcpy(se->u.print.stringg,s);
+	}else{
+		se->u.print.stringg=NULL;
+	}
 	return se;
 }
 

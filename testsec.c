@@ -11,11 +11,7 @@
 
 int main(int argc,char *argv[]){
 	freopen(argv[1],"r",stdin);
-	
-	A_prog p=proc_prog();
-	printf("end sec testing\n");
-	
+	A_prog p=proc_prog();	
 	getpcode(p);
 	outputpcode();
-	
 }

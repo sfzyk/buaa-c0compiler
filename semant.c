@@ -695,8 +695,10 @@ A_com proc_op(TAB_table env){
 			op=A_L;
 			break;
 		default:
+			assert(0);
 			break;
 	}
+	getnext();
 	return op;
 }
 
@@ -718,7 +720,6 @@ A_flag proc_flag(TAB_table env){
 		return A_Flag(expl,op,expr,tokenp->tokpos);
 	}
 	
-	getnext();
 	op= proc_op(env);
 	expr= proc_exp(env);
 	return A_Flag(expl,op,expr,tokenp->tokpos);
@@ -876,37 +877,32 @@ A_seq proc_print(TAB_table env,A_rettype rettype){
 		error(tokenp->tokpos,"( missing at begin of printf");
 	}
 	getnext();
-	char buffer[50];
+	char buffer[300];
+	int needc=0;
 	while(tokenp->tkinfo.sym!=RPSY){
-		 
-		int needc =0;
-		
 		if(tokenp->tkinfo.sym==STRING){
 			/*
 			获取值 
 			*/
-	 
 			memset(buffer,0,sizeof(buffer));
 			strcpy(buffer,tokenp->tkinfo.u.str);
-
 			getnext();
-		 
 			needc=1; 
 		}
- 
 		/*
 		获取 exp 
 		*/
 		if(tokenp->tkinfo.sym==COMMASY || needc==0){
-			if(tokenp->tkinfo.sym==COMMASY)getnext();
-			
+			if(tokenp->tkinfo.sym==COMMASY)getnext();	
 			exp=proc_exp(env);
 		}
- 
 	}
 	
-	seq=A_PrintSeq(buffer,exp,tokenp->tokpos);
-	
+	if(needc)
+		seq=A_PrintSeq(buffer,exp,tokenp->tokpos);
+	else
+		seq=A_PrintSeq(NULL,exp,tokenp->tokpos);
+		
 	getnext();	
 	return seq;
 }

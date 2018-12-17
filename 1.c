@@ -12,6 +12,6 @@ void main()
         perimeter=2*PI*radius;
 		area=PI*radius*radius;
      }
-     printf("This is a program that compute Circle's Area and Perimeter.");
+     printf("This is a program that compute Circle's Area and Perimeter.\n");
      printf (area);
 }

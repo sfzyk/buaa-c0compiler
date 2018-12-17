@@ -8,6 +8,5 @@ void main()
       result=result+i;
       i= i+1;
    }
-   printf("The result is:");
    printf(result);
 }

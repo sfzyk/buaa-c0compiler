@@ -18,12 +18,12 @@ struct pentry_{
 		 	symbol func; 
 			A_argList arglist;	
 			A_rettype ty;
-			int lev;
+			lev lev;
 			int *start;
 		}fun;				
 	}u;
 }; 
 
 P_entry PvarEntry(symbol va,A_type ty,int isconstval,A_constval t,int,int);
-P_entry PfuncEntry(symbol,A_rettype,A_argList,int,int);
+P_entry PfuncEntry(symbol,A_rettype,A_argList,lev,int);
 
