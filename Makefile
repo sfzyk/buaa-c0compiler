@@ -1,6 +1,3 @@
- 
-
- 
 CC       = gcc.exe -D__DEBUG__ 
 
 OBJ      = absyn.o c0error.o c0lex.o env.o print.o semant.o symbol.o table.o testsec.o util.o lev.o penv.o topcode.o
@@ -13,6 +10,9 @@ CFLAGS   = $(INCS) -g2 -std=c11 -g
 .PHONY: all all-before all-after clean clean-custom
 
 all: all-before $(BIN) all-after
+
+simulator.exe : simulator simulator.c
+	$(CC) simulator.c -o simulator.exe
 
 clean: clean-custom
 	${RM} $(OBJ) $(BIN)

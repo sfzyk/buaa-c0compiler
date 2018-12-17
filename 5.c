@@ -10,7 +10,7 @@ int mod(int x,int y)
 {
   return (x-x/y*y);
 }
-
+ 
 void main()
 {
   int a,b,c,temp1,temp2,result_1,result_2;
