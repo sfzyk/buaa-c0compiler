@@ -127,7 +127,7 @@ OPR  x,y  根据y执行不同的运算操作，如下
 因为pl0树上的pcode是不够的，并且模型也不够表示，所以这里对活动记录，栈帧表示进行了些许修改。
 
 修改后的活动记录，每一个栈帧自下而上分别是 返回值，动态链，静态链， 返回地址
-![AR]()
+![AR](https://raw.githubusercontent.com/sfzyk/buaa-c0compiler/master/fig/ar.png)
 
 因为要进行函数参数传递的缘故，参考后面的pascal-s 添加了mks 指令，用在cal指令前设置一个栈帧，其中就包括了参数的分配
 
