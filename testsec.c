@@ -6,7 +6,6 @@
 #include "symbol.h"
 #include "absyn.h"
 #include "semant.h"
-#include "print.h"
 #include "topcode.h"
 
 int main(int argc,char *argv[]){
