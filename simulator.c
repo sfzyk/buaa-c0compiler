@@ -4,6 +4,7 @@
 #include <string.h>
  
 #define MAX_LEN (200)
+
 void *checked_malloc(int len)
 {
 	void *p = malloc(len);
@@ -74,7 +75,7 @@ int doit(){
 		}
 		case MKS:{
 			S[t+1]=b; //动态链
-			S[t+2]=b;
+			S[t+2]=b; //看起来很奇怪，但是是必要的 
 			b=t;
 			t=t+4+y;
 			break;

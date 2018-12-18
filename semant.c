@@ -130,7 +130,7 @@ A_prog proc_prog(){
  
 	
 	prelook(2);
-	while(tokenp->tkinfo.sym==COMMASY ||tokenp->tkinfo.sym == SEMISY||tokenp->tkinfo.sym == EQSY){ //解析足够多的 变量定义 
+	while(tokenp->tkinfo.sym==COMMASY ||tokenp->tkinfo.sym == SEMISY||tokenp->tkinfo.sym == ASSSY){ //解析足够多的 变量定义 
 		prelook(0);
 		vdl = proc_vardec_list(env,vdl);
 		prelook(2);
@@ -388,6 +388,7 @@ A_argList proc_arg_list(TAB_table env){
 	A_argList al=NULL;
 	
 	if(tokenp->tkinfo.sym!=LPSY){
+//		printf("%d",tokenp->tokpos);
 		error(tokenp->tokpos,"( expected here : 15");
 	}
 	
@@ -575,6 +576,7 @@ A_seq proc_seq(TAB_table env,A_rettype rettype){
 	
 	if(tokenp->tkinfo.sym!=SEMISY &&hasse){
 		error(tokenp->tokpos,"; expected here :5");
+		return seq;
 	}
 	
 	if(hasse)getnext();

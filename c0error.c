@@ -33,6 +33,7 @@ void error(int pos,char *message){
 	}
 	
 	if(posLi2)fprintf(stderr,"%d line %d pos ",num,pos-posLi2->pos);
+	else fprintf(stderr,"0 line %d pos ",pos);
 	fprintf(stderr,"error :%s\n",message);
 	
 }
