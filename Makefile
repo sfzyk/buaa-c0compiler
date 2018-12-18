@@ -1,7 +1,7 @@
 CC       = gcc.exe -D__DEBUG__ 
 
-OBJ      = absyn.o c0error.o c0lex.o env.o print.o semant.o symbol.o table.o testsec.o util.o lev.o penv.o topcode.o
-LINKOBJ  = absyn.o c0error.o c0lex.o env.o print.o semant.o symbol.o table.o testsec.o util.o lev.o penv.o topcode.o
+OBJ      = absyn.o c0error.o c0lex.o env.o semant.o symbol.o table.o testsec.o util.o lev.o penv.o topcode.o
+LINKOBJ  = absyn.o c0error.o c0lex.o env.o semant.o symbol.o table.o testsec.o util.o lev.o penv.o topcode.o
 BIN      = sfti.exe
  
 CFLAGS   = $(INCS) -g2 -std=c11 -g
@@ -31,9 +31,6 @@ c0lex.o: c0lex.c
 
 env.o: env.c
 	$(CC) -c env.c -o env.o $(CFLAGS)
-
-print.o: print.c
-	$(CC) -c print.c -o print.o $(CFLAGS)
 
 semant.o: semant.c
 	$(CC) -c semant.c -o semant.o $(CFLAGS)
