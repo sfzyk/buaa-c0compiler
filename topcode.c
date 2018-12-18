@@ -74,6 +74,7 @@ static void display(pcode pc){
 		case LOD:printf("LOD  ");break;
 		case STO:printf("STO  ");break;
 		case CAL:printf("CAL  ");break;
+		case WRTF:printf("WRTF  ");break;
 		case PINT:printf("INT  ");break;
 		case JMP:printf("JMP  ");break;
 		case JPC:printf("JPC  ");break;
@@ -123,6 +124,7 @@ static void AllocVar(TAB_table env,lev l,A_type t,symbol sym){
 			case FLOAT_TY:{
 				pe=PvarEntry(sym,FLOAT_TY,0,constnull(),l->lev,l->offset);
 				l->offset++;
+				break;
 			}
 			
 			case STRING_TY:{
@@ -203,11 +205,21 @@ void pproc_factor(TAB_table env,A_f f,lev l, A_type ty){//A_syf,A_expf,A_intf,A_
 			break;
 		}
 		case A_intf:{
-			outpcode(LIT,0,f->u.intt);
+			float te;
+			if(ty==FLOAT_TY){
+				te=f->u.intt; 
+				outpcode(LIT,0,*(int *)&te); // 字面类型的隐式转换 
+			}else{ 
+				outpcode(LIT,0,f->u.intt);
+			} 
 			break;
 		}
 		case A_floatf:{
-			outpcode(LIT,0,*(int *)&(f->u.floatt));
+			if(ty==INT_TY){
+				outpcode(LIT,0,(int)f->u.floatt); // float to int
+			}{
+				outpcode(LIT,0,*(int *)&(f->u.floatt));
+			}
 			break;
 		}
 		case A_callf:{
@@ -311,7 +323,7 @@ void pproc_flag(TAB_table env,A_flag fl,lev l){
 	if(lef==FLOAT_TY || rig==FLOAT_TY){
 		t=FLOAT_TY;	
 	}
-	
+ 
 	pproc_exp(env,fl->left,l,t);
 	pproc_exp(env,fl->right,l,t);
 	
@@ -405,10 +417,15 @@ void pproc_seq(TAB_table env,A_seq seq,lev l){
 					outpcode(WRTS,0,0);
 				}
 			}
+			
 			if(seq->u.print.exp){
 				A_type t=find_type(env,seq->u.print.exp);
-				pproc_exp(env,seq->u.print.exp,l,t);					
-				outpcode(WRT,0,0);
+				pproc_exp(env,seq->u.print.exp,l,t);		
+				if(t==FLOAT_TY){
+					outpcode(WRTF,0,0);
+				}else{
+					outpcode(WRT,0,0);
+				}
 			}
 			break;
 		}
@@ -502,7 +519,7 @@ void pproc_func(TAB_table env,A_funcDec fd,lev l){
 // note 目前不需要考虑静态链信息 
 // 如果有程序的子函数定义(目前没有) ，那么就应该在这里进行管理
 // to do
-	//之前的函数地址已经确定  
+//之前的函数地址已经确定  
  
 	*pe->u.fun.start=ip;
 	if(newoffset-oldoffset!=0) 

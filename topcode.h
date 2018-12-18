@@ -30,9 +30,8 @@ btab Btab(int last,int lastpar,int psize,int vsize);
 void topcode(A_prog);
 typedef struct pcode_ * pcode;
 enum pty{
-	LIT,OPR,OPRF,LOD,STO,CAL,PINT,JMP,JPC,RED,WRT,WRTS,MKS,FLT
+	LIT,OPR,OPRF,LOD,STO,CAL,PINT,JMP,JPC,RED,WRT,WRTS,MKS,FLT,WRTF
 };
-
 
 
 struct pcode_{

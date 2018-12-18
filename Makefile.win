@@ -4,8 +4,8 @@
 CPP      = g++.exe -D__DEBUG__
 CC       = gcc.exe -D__DEBUG__
 WINDRES  = windres.exe
-OBJ      = absyn.o c0error.o c0lex.o env.o print.o semant.o symbol.o table.o testsec.o util.o
-LINKOBJ  = absyn.o c0error.o c0lex.o env.o print.o semant.o symbol.o table.o testsec.o util.o
+OBJ      = absyn.o c0error.o c0lex.o env.o print.o semant.o symbol.o table.o testsec.o util.o topcode.o penv.o lev.o
+LINKOBJ  = absyn.o c0error.o c0lex.o env.o print.o semant.o symbol.o table.o testsec.o util.o topcode.o penv.o lev.o
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -g3
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
@@ -53,3 +53,12 @@ testsec.o: testsec.c
 
 util.o: util.c
 	$(CC) -c util.c -o util.o $(CFLAGS)
+
+topcode.o: topcode.c
+	$(CC) -c topcode.c -o topcode.o $(CFLAGS)
+
+penv.o: penv.c
+	$(CC) -c penv.c -o penv.o $(CFLAGS)
+
+lev.o: lev.c
+	$(CC) -c lev.c -o lev.o $(CFLAGS)

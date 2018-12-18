@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
  
@@ -18,7 +19,7 @@ typedef struct pcode_ * pcode;
 
 
 enum pty{
-	LIT,OPR,OPRF,LOD,STO,CAL,PINT,JMP,JPC,RED,WRT,WRTS,MKS,FLT
+	LIT,OPR,OPRF,LOD,STO,CAL,PINT,JMP,JPC,RED,WRT,WRTS,MKS,FLT,WRTF
 };
 
 struct pcode_{
@@ -113,7 +114,7 @@ int doit(){
 			int l=strlen(buffer);
 			int f=0;
 			for(int i=0;i<l;i++){
-				if(buffer[l]=='.'){
+				if(buffer[i]=='.'){
 					f=1;
 				}
 			}
@@ -138,6 +139,11 @@ int doit(){
 		}
 		case WRT:{
 			printf("%d",S[t-1]);
+			t=t-1;
+			break;
+		}
+		case WRTF:{
+			printf("%f",*(float *)&S[t-1]);
 			t=t-1;
 			break;
 		}
@@ -240,6 +246,88 @@ int doit(){
 			}
 			break;
 		}
+		case OPRF:{
+		switch(y){
+			case 0:{
+				printf("OPRF not ret intr");
+				assert(0);
+				return 1;
+			}
+			case 2:{
+				float te=(*(float *)&S[t-2]+*(float *)&S[t-1]);
+				S[t-2]=*(int *)&te;
+				t=t-1;
+				break;
+			}
+			case 3:{
+				float te=(*(float *)&S[t-2]-*(float *)&S[t-1]);
+				S[t-2]=*(int *)&te;
+				t=t-1;
+				break;
+			}
+			case 4:{
+				float te=( (*(float *)&S[t-2])*(*(float *)&S[t-1]));
+				S[t-2]=*(int *)&te;
+				t=t-1;
+				break;
+			}
+			case 5:{
+				float te=((*(float *)&S[t-2])/(*(float *)&S[t-1]));
+				S[t-2]=*(int *)&te;
+				t=t-1;
+				break;
+			} 
+			case 9:{
+				if(S[t-2]==S[t-1]){
+					S[t-2]=0;
+				}
+				else S[t-2]=1;
+				t=t-1;
+				break;
+			}
+			case 8:{
+				if(S[t-2]!=S[t-1]){
+					S[t-2]=0;
+				}
+				else S[t-2]=1;
+				t=t-1;
+				break;
+			}
+			case 10:{
+				if(*(float *)&S[t-2]>=*(float *)&S[t-1]){
+					S[t-2]=0;
+				}
+				else S[t-2]=1;
+				t=t-1;
+				break;	
+			}
+			case 11:{
+				if(*(float *)&S[t-2]<=*(float *)&S[t-1]){
+					S[t-2]=0;
+				}
+				else S[t-2]=1;
+				t=t-1;
+				break;
+			}
+			case 12:{
+				if(*(float *)&S[t-2]<*(float *)&S[t-1]){
+					S[t-2]=0;
+				}
+				else S[t-2]=1;
+				t=t-1;		
+				break;
+			}
+			case 13:{
+				if(*(float *)&S[t-2]>*(float *)&S[t-1]){
+					S[t-2]=0;
+				}
+				else S[t-2]=1;
+				t=t-1;
+				break;
+			}
+		}
+		break;
+	}
 	}
 	ip++;
 	return 1;
@@ -301,6 +389,9 @@ int main(int argc , char *argv[]){
 			case 'W':{
 				if(buffer[10]=='S'){
 					intr[ip]=Pcode(WRTS,x,y);
+				}
+				else if(buffer[10]=='F'){
+					intr[ip]=Pcode(WRTF,x,y);
 				}else{
 					intr[ip]=Pcode(WRT,x,y);
 				}

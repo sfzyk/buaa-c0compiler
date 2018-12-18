@@ -96,19 +96,19 @@ static void type_check(TAB_table env,A_argList a,A_valArgs b){
 	int count =0;
 	while(a && b){
 		if(a->head->type !=find_type(env,b->head)){
-			error(a->pos,"funciton arg cannot match defined here");
-			error(b->pos,"funciton arg cannot match used here");
+			error(a->pos,"funciton arg cannot match defined here : 1");
+			error(b->pos,"funciton arg cannot match used here : 2 ");
 		}
 		a=a->tail;
 		b=b->tail;
 	}
 	
 	if(a && !b){
-		error(tokenp->tokpos,"too few for function args ");
+		error(tokenp->tokpos,"too few for function args : 3");
 	}
 	
 	if(b && !a){
-		error(tokenp->tokpos,"too many for funtion args");
+		error(tokenp->tokpos,"too many for funtion args : 4");
 	}
 	
 }
@@ -203,7 +203,7 @@ A_constDecList proc_constdec_list(TAB_table env,A_constDecList cdl){
 		getnext();
 		return cdl;
 	}else{
-		error(tokPos,"expected ; here\n");
+		error(tokPos,"expected ; here : 5");
 		getnext();
 		return cdl;// 先这样返回这 
 	}
@@ -229,7 +229,7 @@ A_constDec proc_const(TAB_table env,A_type ty){
 		switch(tokenp->tkinfo.sym){
 			case INT:
 				if(ty!=INT_TY){
-					error(tokenp->tokpos,"expect int here");
+					error(tokenp->tokpos,"expect int here : 6");
 					t.num=0;
 				}else{
 					t=A_ConstNum(tokenp->tkinfo.u.num); 
@@ -239,7 +239,7 @@ A_constDec proc_const(TAB_table env,A_type ty){
 			break;
 			case STRING:
 				if(ty!=STRING_TY){
-					error(tokenp->tokpos,"expect string here");
+					error(tokenp->tokpos,"expect string here : 7");
 					t.stringg=(char *)checked_malloc(2);
 					
 				}else{
@@ -249,7 +249,7 @@ A_constDec proc_const(TAB_table env,A_type ty){
 			break;			
 			case FLOAT:
 				if(ty!=FLOAT_TY){
-					error(tokenp->tokpos,"expect string here");
+					error(tokenp->tokpos,"expect float here : 8");
 					t.flo=0;
 				}else{
 					t=A_ConstFloat(tokenp->tkinfo.u.f);
@@ -262,7 +262,7 @@ A_constDec proc_const(TAB_table env,A_type ty){
 		getnext(); 
 		return cd;
 	}else{
-		error(tokenp->tokpos,"expected = here");
+		error(tokenp->tokpos,"expected = here : 9");
 		return NULL;
 	}
 }
@@ -284,7 +284,7 @@ A_varDec proc_vardec(TAB_table env,A_type ty){
 		/*
 		接受 a 的值 
 		*/
-		error(tokenp->tokpos,"var define cannot be init");
+		error(tokenp->tokpos,"var define cannot be init : 10");
 		getnext(); 
 	}
 	return vd;
@@ -301,7 +301,7 @@ A_varDecList proc_vardec_list(TAB_table env,A_varDecList vdl){
 		case STRINGSY:
 			ty=STRING_TY;break;
 		default:
-			error(tokenp->tokpos,"unknown type (int string flaot allowed)");
+			error(tokenp->tokpos,"unknown type (int string float allowed) : 11");
 	}
 	getnext();
 	/*
@@ -321,7 +321,7 @@ A_varDecList proc_vardec_list(TAB_table env,A_varDecList vdl){
 		getnext();
 		return vdl;
 	}else{
-		error(tokenp->tokpos,"unknow char in variable define");
+		error(tokenp->tokpos,"unknow char in variable define : 12");
 		getnext();
 		return vdl;
 	}
@@ -339,7 +339,7 @@ A_funcDec proc_funcdec(TAB_table env){
 		case VOIDSY:
 			ret=VOID_RETTY;break;
 		default:
-			error(tokenp->tokpos,"unknown return type for function");
+			error(tokenp->tokpos,"unknown return type for function : 13");
 	}
 	getnext();
 	/*
@@ -367,7 +367,7 @@ A_main proc_main(TAB_table env){
 		case INTSY:
 			ret=INT_RETTY;break;
 		default:
-			error(tokenp->tokpos,"invaild return type for main function");
+			error(tokenp->tokpos,"invaild return type for main function : 14");
 			ret = VOID_RETTY;break;
 	}
  
@@ -388,7 +388,7 @@ A_argList proc_arg_list(TAB_table env){
 	A_argList al=NULL;
 	
 	if(tokenp->tkinfo.sym!=LPSY){
-		error(tokenp->tokpos,"( expected here");
+		error(tokenp->tokpos,"( expected here : 15");
 	}
 	
 	getnext();
@@ -396,7 +396,7 @@ A_argList proc_arg_list(TAB_table env){
 	al=proc_args(env);
 	
 	if(tokenp->tkinfo.sym!=RPSY){
-		error(tokenp->tokpos,") expected here");
+		error(tokenp->tokpos,") expected here : 16 ");
 	}
 	getnext();
 	
@@ -434,7 +434,7 @@ A_arg proc_arg(TAB_table env){
 			getnext();
 			break;
 		default:   
-			error(tokenp->tokpos,"unknown type in arg");
+			error(tokenp->tokpos,"unknown type in arg : 17");
 	}                                       
 	return arg;                
 }
@@ -450,7 +450,7 @@ A_argList proc_args(TAB_table env){
 		A_arg a= proc_arg(env);
 		al=A_ArgList(a,al,tokenp->tokpos); 
 		if(tokenp->tkinfo.sym !=COMMASY && tokenp->tkinfo.sym !=RPSY){
-			error(tokenp->tokpos,"expected , or ) here");	
+			error(tokenp->tokpos,"expected , or ) here : 18");	
 			getnext();
 			continue;
 		}
@@ -490,13 +490,13 @@ A_cseqs proc_func_body(TAB_table env,A_rettype ret){
 			getnext();
 			return cseqs;
 		}else{
-			error(tokenp->tokpos,"func body } misssing ");
+			error(tokenp->tokpos,"func body } misssing : 19");
 			getnext();
 			return cseqs;
 		}
 		
 	}else{
-		error(tokenp->tokpos,"unknown function deimilter"); 
+		error(tokenp->tokpos,"unknown function deimilter : 20"); 
 		return cseqs;
 	}
 }
@@ -544,7 +544,7 @@ A_seq proc_seq(TAB_table env,A_rettype rettype){
 				getnext();
 				return seq;
 			}else{
-				error(tokenp->tokpos,"seq body } misssing ");
+				error(tokenp->tokpos,"seq body } misssing : 21");
 				getnext();
 				return seq;
 			}
@@ -569,12 +569,12 @@ A_seq proc_seq(TAB_table env,A_rettype rettype){
 						break;
 					default:
 						prelook(0);
-						error(tokenp->tokpos,"unknown seq here");
+						error(tokenp->tokpos,"unknown seq here : 22");
 				}
 	}
 	
 	if(tokenp->tkinfo.sym!=SEMISY &&hasse){
-		error(tokenp->tokpos,"; expected here");
+		error(tokenp->tokpos,"; expected here :5");
 	}
 	
 	if(hasse)getnext();
@@ -733,13 +733,13 @@ A_seq proc_ifseq(TAB_table env,A_rettype rettype){
 	
 	getnext();
 	if(tokenp->tkinfo.sym!=LPSY){
-		error(tokenp->tokpos,"if seq ( missing");
+		error(tokenp->tokpos,"if seq ( missing : 23");
 	}
 	getnext();
 	flag = proc_flag(env);
 	
 	if(tokenp->tkinfo.sym!=RPSY){
-		error(tokenp->tokpos,"if seq ) missing");
+		error(tokenp->tokpos,"if seq ) missing : 24");
 	}
 	
 	getnext();
@@ -762,14 +762,14 @@ A_seq proc_whileseq(TAB_table env,A_rettype rettype){
 	getnext();
 	
 	if(tokenp->tkinfo.sym!=LPSY){
-		error(tokenp->tokpos,"if seq ( missing");
+		error(tokenp->tokpos,"if seq ( missing : 23");
 	}
 	
 	getnext();
 	flag = proc_flag(env);
 	
 	if(tokenp->tkinfo.sym!=RPSY){
-		error(tokenp->tokpos,"if seq ) missing");
+		error(tokenp->tokpos,"if seq ) missing : 24");
 	}
 	getnext();
 	body = proc_seq(env,rettype);
@@ -787,7 +787,7 @@ A_f proc_factor(TAB_table env){
 			{
 				A_exp exp =proc_exp(env);
 				if(tokenp->tkinfo.sym != RPSY){
-					error(tokenp->tokpos,"exp ) missing");
+					error(tokenp->tokpos,"exp ) missing : 24 ");
 				}
 				getnext();
 				f=A_Expf(exp,tokenp->tokpos);
@@ -813,7 +813,7 @@ A_f proc_factor(TAB_table env){
 				*/
 				E_entry ent = S_look(env,Symbol(tokenp->tkinfo.u.str));
 				if(ent==NULL){
-					error(tokenp->tokpos,"unknown id:by defaylt is 0");
+					error(tokenp->tokpos,"unknown id:by defaylt is 0 : 25");
 					return A_Intf(0,tokenp->tokpos);
 				}
 				
@@ -833,7 +833,7 @@ A_f proc_factor(TAB_table env){
 			}
 			break;
 		default:
-			error(tokenp->tokpos,"unknown factor");
+			error(tokenp->tokpos,"unknown factor : 26");
 			getnext(); 
 			return NULL;
 	}
@@ -846,22 +846,23 @@ A_seq proc_return(TAB_table env,A_rettype rettype){
 	if(tokenp->tkinfo.sym!=SEMISY){
 
 		if(tokenp->tkinfo.sym!=LPSY){
-			error(tokenp->tokpos,"( missing at begin of return exp");
+			error(tokenp->tokpos,"( missing at begin of return exp : 23");
 		}
 		getnext();
 		
 		exp= proc_exp(env);
 		
 		if(tokenp->tkinfo.sym!=RPSY){
-			error(tokenp->tokpos,") missing at end of return exp");
+			error(tokenp->tokpos,") missing at end of return exp : 24");
 		}
 		else getnext();
 		
 		A_type acttype = find_type(env,exp);
-		A_rettype ret=ret2type(acttype);
 		
-		if(ret != rettype){
-			error(tokenp->tokpos , "rettype error :no match");
+		A_rettype ret=ret2type(rettype);		
+//		printf("%d %d\n",acttype,ret);
+		if(ret != acttype){
+			error(tokenp->tokpos , "rettype error :no match : 25");
 		}
 	}
 	
@@ -874,7 +875,7 @@ A_seq proc_print(TAB_table env,A_rettype rettype){
 	A_exp exp=NULL; 
 	getnext();
 	if(tokenp->tkinfo.sym!=LPSY){
-		error(tokenp->tokpos,"( missing at begin of printf");
+		error(tokenp->tokpos,"( missing at begin of printf : 23");
 	}
 	getnext();
 	char buffer[300];
@@ -913,7 +914,7 @@ A_seq proc_scanf(TAB_table env,A_rettype rettype){
 	getnext();
 	
 	if(tokenp->tkinfo.sym!=LPSY){
-		error(tokenp->tokpos,"( misssing at end of scanf");
+		error(tokenp->tokpos,"( misssing at end of scanf : 23");
 	}
 	
 	getnext(); 
@@ -922,7 +923,7 @@ A_seq proc_scanf(TAB_table env,A_rettype rettype){
 	E_entry entry =S_look(env,sym);
 	
 	if(entry==NULL){
-		error(tokenp->tokpos,"unknown varivable");
+		error(tokenp->tokpos,"unknown varivable : 25");
 	}
  
 	/*
@@ -931,7 +932,7 @@ A_seq proc_scanf(TAB_table env,A_rettype rettype){
 	getnext();
 	
 	if(tokenp->tkinfo.sym!=RPSY){
-		error(tokenp->tokpos,") missing at end of scanf");
+		error(tokenp->tokpos,") missing at end of scanf : 24");
 	}
 	else getnext();
 	
@@ -947,12 +948,12 @@ A_seq proc_func(TAB_table env,A_rettype rettype){
 	
 	E_entry entry =S_look(env,funcsym);
 	if(!entry || entry->kind!=fun){
-		error(tokenp->tokpos,"this cannot be called");
+		error(tokenp->tokpos,"this cannot be called : 28");
 	}
 	
 	getnext();		
 	if(tokenp->tkinfo.sym!=LPSY){
-		error(tokenp->tokpos,"( missing at func call");
+		error(tokenp->tokpos,"( missing at func call : 23");
 	}
 	
 	getnext();
@@ -960,7 +961,7 @@ A_seq proc_func(TAB_table env,A_rettype rettype){
 	seq =A_CallSeq(funcsym,val,tokenp->tokpos);
 	
 	if(tokenp->tkinfo.sym!=RPSY){
-		error(tokenp->tokpos,"） missing at func call");
+		error(tokenp->tokpos,"） missing at func call : 24 ");
 	}
 	getnext();
 	return seq;
@@ -979,12 +980,12 @@ A_seq proc_assign(TAB_table env,A_rettype rettype){
 	
 	
 	if(!entry || entry->kind!=var){
-		error(tokenp->tokpos,"not valid left value"); 
+		error(tokenp->tokpos,"not valid left value : 29"); 
 		return seq;
 	}
 	
 	if(entry->u.var.isconst==1){
-		error(tokenp->tokpos,"const cannot be left value");
+		error(tokenp->tokpos,"const cannot be left value : 29");
 	}
 		
 	getnext();
@@ -998,7 +999,7 @@ A_seq proc_assign(TAB_table env,A_rettype rettype){
 	A_type ty=find_type(env,exp);
 	
 	if(ty!=entry->u.var.ty){
-		error(tokenp->tokpos,"assign type cannot match");
+		error(tokenp->tokpos,"assign type cannot match : 30");
 	}
 	
 	return A_AssSeq(entry->u.var.varr,exp,tokenp->tokpos);
